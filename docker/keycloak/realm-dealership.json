@@ -1,0 +1,73 @@
+{
+  "realm": "dealership",
+  "enabled": true,
+  "displayName": "Dealership",
+  "roles": {
+    "realm": [
+      {"name": "USER"},
+      {"name": "MANAGER"},
+      {"name": "WAREHOUSE_ADMIN"},
+      {"name": "ADMIN"}
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "dealership-api",
+      "name": "Dealership API",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "client",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Ivan",
+      "lastName": "Client",
+      "credentials": [
+        {"type": "password", "value": "client", "temporary": false}
+      ],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Olga",
+      "lastName": "Manager",
+      "credentials": [
+        {"type": "password", "value": "manager", "temporary": false}
+      ],
+      "realmRoles": ["MANAGER", "USER"]
+    },
+    {
+      "username": "warehouse",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Sergey",
+      "lastName": "Warehouse",
+      "credentials": [
+        {"type": "password", "value": "warehouse", "temporary": false}
+      ],
+      "realmRoles": ["WAREHOUSE_ADMIN", "USER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "Root",
+      "credentials": [
+        {"type": "password", "value": "admin", "temporary": false}
+      ],
+      "realmRoles": ["ADMIN", "USER", "MANAGER", "WAREHOUSE_ADMIN"]
+    }
+  ]
+}

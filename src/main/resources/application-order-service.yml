@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: order-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/dealership_order}
+    username: ${SPRING_DATASOURCE_USERNAME:dealership}
+    password: ${SPRING_DATASOURCE_PASSWORD:dealership}
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: ${SERVER_PORT:8080}
+
+grpc:
+  server:
+    port: 0

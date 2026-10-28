@@ -1,0 +1,604 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 002-create-car-models
+      author: openai
+      changes:
+        - createTable:
+            tableName: car_models
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: brand
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fuel_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_power_hp
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_volume_liters
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gearbox_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: drive_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: base_price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 003-create-car-model-required-components
+      author: openai
+      changes:
+        - createTable:
+            tableName: car_model_required_components
+            columns:
+              - column:
+                  name: car_model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: component_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: car_model_required_components
+            columnNames: car_model_id, component_type
+            constraintName: pk_car_model_required_components
+        - addForeignKeyConstraint:
+            baseTableName: car_model_required_components
+            baseColumnNames: car_model_id
+            referencedTableName: car_models
+            referencedColumnNames: id
+            constraintName: fk_car_model_required_components_model
+
+  - changeSet:
+      id: 004-create-component-options
+      author: openai
+      changes:
+        - createTable:
+            tableName: component_options
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: component_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: option_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delta_price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 005-create-component-option-models
+      author: openai
+      changes:
+        - createTable:
+            tableName: component_option_models
+            columns:
+              - column:
+                  name: component_option_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: component_option_models
+            columnNames: component_option_id, car_model_id
+            constraintName: pk_component_option_models
+        - addForeignKeyConstraint:
+            baseTableName: component_option_models
+            baseColumnNames: component_option_id
+            referencedTableName: component_options
+            referencedColumnNames: id
+            constraintName: fk_component_option_models_option
+        - addForeignKeyConstraint:
+            baseTableName: component_option_models
+            baseColumnNames: car_model_id
+            referencedTableName: car_models
+            referencedColumnNames: id
+            constraintName: fk_component_option_models_model
+
+  - changeSet:
+      id: 006-create-cars-in-stock
+      author: openai
+      changes:
+        - createTable:
+            tableName: cars_in_stock
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: available_for_test_drive
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cars_in_stock
+            baseColumnNames: model_id
+            referencedTableName: car_models
+            referencedColumnNames: id
+            constraintName: fk_cars_in_stock_model
+
+  - changeSet:
+      id: 007-create-spare-parts
+      author: openai
+      changes:
+        - createTable:
+            tableName: spare_parts
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: part_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 008-create-spare-part-models
+      author: openai
+      changes:
+        - createTable:
+            tableName: spare_part_models
+            columns:
+              - column:
+                  name: spare_part_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: spare_part_models
+            columnNames: spare_part_id, car_model_id
+            constraintName: pk_spare_part_models
+        - addForeignKeyConstraint:
+            baseTableName: spare_part_models
+            baseColumnNames: spare_part_id
+            referencedTableName: spare_parts
+            referencedColumnNames: id
+            constraintName: fk_spare_part_models_part
+        - addForeignKeyConstraint:
+            baseTableName: spare_part_models
+            baseColumnNames: car_model_id
+            referencedTableName: car_models
+            referencedColumnNames: id
+            constraintName: fk_spare_part_models_model
+
+  - changeSet:
+      id: 009-create-common-orders
+      author: openai
+      changes:
+        - createTable:
+            tableName: common_orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: common_orders
+            baseColumnNames: client_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_common_orders_client
+        - addForeignKeyConstraint:
+            baseTableName: common_orders
+            baseColumnNames: manager_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_common_orders_manager
+        - addForeignKeyConstraint:
+            baseTableName: common_orders
+            baseColumnNames: car_id
+            referencedTableName: cars_in_stock
+            referencedColumnNames: id
+            constraintName: fk_common_orders_car
+
+  - changeSet:
+      id: 010-create-custom-orders
+      author: openai
+      changes:
+        - createTable:
+            tableName: custom_orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(19,2)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: custom_orders
+            baseColumnNames: client_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_custom_orders_client
+        - addForeignKeyConstraint:
+            baseTableName: custom_orders
+            baseColumnNames: manager_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_custom_orders_manager
+        - addForeignKeyConstraint:
+            baseTableName: custom_orders
+            baseColumnNames: model_id
+            referencedTableName: car_models
+            referencedColumnNames: id
+            constraintName: fk_custom_orders_model
+
+  - changeSet:
+      id: 011-create-custom-order-options
+      author: openai
+      changes:
+        - createTable:
+            tableName: custom_order_options
+            columns:
+              - column:
+                  name: custom_order_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: component_option_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: custom_order_options
+            columnNames: custom_order_id, component_option_id
+            constraintName: pk_custom_order_options
+        - addForeignKeyConstraint:
+            baseTableName: custom_order_options
+            baseColumnNames: custom_order_id
+            referencedTableName: custom_orders
+            referencedColumnNames: id
+            constraintName: fk_custom_order_options_order
+        - addForeignKeyConstraint:
+            baseTableName: custom_order_options
+            baseColumnNames: component_option_id
+            referencedTableName: component_options
+            referencedColumnNames: id
+            constraintName: fk_custom_order_options_option
+
+  - changeSet:
+      id: 012-create-test-drive-requests
+      author: openai
+      changes:
+        - createTable:
+            tableName: test_drive_requests
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date_time
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: test_drive_requests
+            baseColumnNames: client_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_test_drive_requests_client
+        - addForeignKeyConstraint:
+            baseTableName: test_drive_requests
+            baseColumnNames: car_id
+            referencedTableName: cars_in_stock
+            referencedColumnNames: id
+            constraintName: fk_test_drive_requests_car

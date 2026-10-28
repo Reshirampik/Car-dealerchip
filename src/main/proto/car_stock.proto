@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ru.lab1.dealership.grpc";
+option java_outer_classname = "CarStockProto";
+
+package dealership;
+
+service CarStockService {
+  rpc ListAvailableCars (CarsRequest) returns (CarListResponse);
+  rpc GetAvailableCarById (CarIdRequest) returns (CarDto);
+}
+
+message CarsRequest {}
+
+message CarIdRequest {
+  string id = 1;
+}
+
+message CarDto {
+  string id = 1;
+  string modelId = 2;
+  string modelDisplayName = 3;
+  string color = 4;
+  string price = 5;
+  bool availableForTestDrive = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  bool removed = 9;
+}
+
+message CarListResponse {
+  repeated CarDto cars = 1;
+}

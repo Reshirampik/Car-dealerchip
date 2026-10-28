@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: storage-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/dealership_storage}
+    username: ${SPRING_DATASOURCE_USERNAME:dealership}
+    password: ${SPRING_DATASOURCE_PASSWORD:dealership}
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: ${SERVER_PORT:8082}
+
+grpc:
+  server:
+    port: ${GRPC_SERVER_PORT:9090}
